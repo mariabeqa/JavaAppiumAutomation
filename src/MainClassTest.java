@@ -12,4 +12,9 @@ public class MainClassTest {
         Assert.assertTrue("Returned number is not 14", actual == expected);
     }
 
+    @Test
+    public void testGetClassNumber() {
+        Assert.assertTrue("Returned number is less than 45", mainClassObj.getClassNumber() > 45);
+    }
+
 }
