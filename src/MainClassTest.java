@@ -17,4 +17,12 @@ public class MainClassTest {
         Assert.assertTrue("Returned number is less than 45", mainClassObj.getClassNumber() > 45);
     }
 
+    @Test
+    public void testGetClassString() {
+        String str = mainClassObj.getClassString();
+
+        Assert.assertTrue("String doesn't contain either hello or Hello",
+                str.contains("hello") || str.contains("Hello"));
+    }
+
 }
