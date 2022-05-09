@@ -100,6 +100,17 @@ public class FirstTest {
                 title.getAttribute("text"));
     }
 
+    @Test
+    public void testSearchFieldPlaceholderText() {
+        waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input",
+                5);
+
+        assertElementHasText(By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "Cannot find search field");
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -138,6 +149,15 @@ public class FirstTest {
     private WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
+        return element;
+    }
+
+    private WebElement assertElementHasText(By by, String expectedText, String errorMessage) {
+        WebElement element = waitForElementPresent(by, errorMessage, 5);
+        Assert.assertEquals("Текст элемента отличается от ожидаемого",
+                expectedText,
+                element.getAttribute("text"));
+
         return element;
     }
 
