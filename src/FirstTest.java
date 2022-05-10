@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -111,6 +112,33 @@ public class FirstTest {
                 "Cannot find search field");
     }
 
+    @Test
+    public void testSearchAndCancel() {
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Wikipedia",
+                5);
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "Cannot find search input",
+                5);
+
+        List<WebElement> searchResults = waitForElementsPresent(By.xpath("//*[@resource-id = 'org.wikipedia:id/page_list_item_title'][contains(@text, 'Java')]"),
+                "Результаты поиска отсутствуют",
+                15);
+
+        Assert.assertTrue("Количество статей меньше одной",
+                searchResults.size() > 1);
+
+        waitForElementAndClick(By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find cancel icon",
+                5);
+
+        waitForElementNotPresent(By.xpath("//*[@resource-id = 'org.wikipedia:id/page_list_item_container']//*[@text = 'Object-oriented programming language']"),
+                "Есть результаты поиска",
+                15);
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -159,6 +187,14 @@ public class FirstTest {
                 element.getAttribute("text"));
 
         return element;
+    }
+
+    private List<WebElement> waitForElementsPresent(By by, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        return wait
+                .withMessage(errorMessage)
+                .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
 }
