@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FirstTest {
 
@@ -137,6 +138,33 @@ public class FirstTest {
         waitForElementNotPresent(By.xpath("//*[@resource-id = 'org.wikipedia:id/page_list_item_container']//*[@text = 'Object-oriented programming language']"),
                 "Есть результаты поиска",
                 15);
+    }
+
+    @Test
+    public void testSearchResultsContainsText() {
+        String searchTerm = "Java";
+
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Wikipedia",
+                5);
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text, 'Search…')]"),
+                searchTerm,
+                "Cannot find search input",
+                5);
+
+        List<WebElement> searchResults = waitForElementsPresent(By.xpath("//*[@resource-id = 'org.wikipedia:id/page_list_item_title']"),
+                "Результаты поиска отсутствуют",
+                15);
+
+        List<WebElement> expectedSearchResults = searchResults
+                .stream()
+                .filter(result -> result.getText().contains(searchTerm))
+                .collect(Collectors.toList());
+
+        Assert.assertTrue(String.format("Не все результаты содержат %s", searchTerm),
+                searchResults.size() == expectedSearchResults.size());
+
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
