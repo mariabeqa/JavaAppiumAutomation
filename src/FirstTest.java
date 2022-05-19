@@ -494,6 +494,28 @@ public class FirstTest {
         Assert.assertEquals(secondArticleTitle, actualTitle.getText());
     }
 
+    @Test
+    public void testArticleTitle() {
+        String searchWord = "Selenium";
+        String articleTitle = "Selenium (software)";
+
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Wikipedia",
+                5);
+
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text, 'Search…')]"),
+                searchWord,
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@resource-id = 'org.wikipedia:id/page_list_item_container']//*[@text = '" + articleTitle + "']"),
+                "Cannot find Wikipedia",
+                5);
+
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"),
+                "Title of the article is not present.");
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -619,6 +641,14 @@ public class FirstTest {
     private String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void assertElementPresent(By by, String errorMessage) {
+        int amountOfElements = getAmountOfElements(by);
+        if (amountOfElements > 0) {
+            String defaultMessage = "An element " + by.toString() + " supposed to be present. ";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
+        }
     }
 
 }
