@@ -14,11 +14,19 @@ public class ArticlePageObject extends MainPageObject {
         ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
         MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
         MY_LIST_OK_BUTTON = "//*[@text='OK']",
-        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+        ADD_TO_READING_LIST_BUTTON = "//*[@text = 'Add to reading list']",
+        FOLDER_NAME_ELEMENT = "//*[@text = '{SUBSTRING}']";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
     }
+
+    /* TEMPLATES METHODS */
+    private static String getFolderNameElement(String substring) {
+        return FOLDER_NAME_ELEMENT.replace("{SUBSTRING}", substring);
+    }
+    /* TEMPLATES METHODS */
 
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(By.id(TITLE),
@@ -61,6 +69,22 @@ public class ArticlePageObject extends MainPageObject {
 
         this.waitForElementAndClick(By.xpath(MY_LIST_OK_BUTTON),
                 "Cannot press OK button",
+                5);
+    }
+
+    public void addArticleToAnExistingFolder(String nameOfFolder) {
+        String folderNameXpath = getFolderNameElement(nameOfFolder);
+
+        this.waitForElementAndClick(By.xpath(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                15);
+
+        this.waitForElementAndClick(By.xpath(ADD_TO_READING_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5);
+
+        this.waitForElementAndClick(By.xpath(folderNameXpath),
+                "Cannot find folder name " + nameOfFolder,
                 5);
     }
 

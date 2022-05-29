@@ -2,6 +2,10 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SearchPageObject extends MainPageObject {
 
@@ -11,18 +15,19 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id = 'org.wikipedia:id/page_list_item_container']//*[@text = '{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
+            SEARCH_FIELD_PLACEHOLDER = "org.wikipedia:id/search_src_text",
+            SEARCH_RESULT_TITLE = "//*[@resource-id = 'org.wikipedia:id/page_list_item_title']";
 
-
-    /* TEMPLATES METHODS */
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
     }
-    /* TEMPLATES METHODS */
 
+    /* TEMPLATES METHODS */
     private static String getSearchResultElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
     }
+    /* TEMPLATES METHODS */
 
     public void initSearchInput() {
         this. waitForElementPresent(By.xpath(SEARCH_INIT_ELEMENT),
@@ -90,6 +95,23 @@ public class SearchPageObject extends MainPageObject {
     public void assertThereIsNoSearchResults() {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT),
                 "There are some search results found");
+    }
+
+    public void assertThereIsSearchPlaceholder() {
+        this.waitForElementPresent(By.id(SEARCH_FIELD_PLACEHOLDER),
+                "There is no placeholder text in search field");
+    }
+
+    public List<WebElement> getArticlesThatContains(String searchTerm) {
+        List<WebElement> searchResults = this.waitForElementsPresent(By.xpath(SEARCH_RESULT_TITLE),
+                "There is no search results found",
+                15);
+
+        return searchResults
+                .stream()
+                .filter(result -> result.getText().contains(searchTerm))
+                .collect(Collectors.toList());
+
     }
 
 }

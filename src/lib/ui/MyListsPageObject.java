@@ -18,7 +18,7 @@ public class MyListsPageObject extends MainPageObject {
     }
 
     private static String getSavedArticleXpathByName(String articleTitle) {
-        return FOLDER_BY_NAME_TMP.replace("{TITLE}", articleTitle);
+        return ARTICLE_BY_TITLE_TMP.replace("{TITLE}", articleTitle);
     }
 
     public void openFolderByName(String folderName) {
@@ -51,6 +51,15 @@ public class MyListsPageObject extends MainPageObject {
         this.waitForElementPresent(By.xpath(articleTitleXpath),
                 "Cannot find saved title by title " + articleTitle,
                 15);
+    }
+
+    public void openArticleByTitle(String articleTitle) {
+        this.waitForArticleAppearByTitle(articleTitle);
+        String articleTitleXpath = getSavedArticleXpathByName(articleTitle);
+
+        this.waitForElementAndClick(By.xpath(articleTitleXpath),
+                "Cannot find nav button to My lists",
+                5);
     }
 
 }
