@@ -85,4 +85,16 @@ public class SearchTests extends CoreTestCase {
                 amountOfSearchResults == amountOfArticlesWithSearchTerm.size());
     }
 
+    @Test
+    public void testSearchResultTitleAndDescription() {
+        String searchTerm = "Java";
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchTerm);
+
+        searchPageObject.waitForElementByTitleAndDescription("Java", "Island of Indonesia, Southeast Asia");
+        searchPageObject.waitForElementByTitleAndDescription("JavaScript", "High-level programming language");
+        searchPageObject.waitForElementByTitleAndDescription("Java (programming language)", "Object-oriented programming language");
+    }
+
 }
