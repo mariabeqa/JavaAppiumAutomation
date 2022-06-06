@@ -1,13 +1,12 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
 public class MyListsPageObject extends MainPageObject {
 
     private static final String
-        FOLDER_BY_NAME_TMP = "//*[@text='{FOLDER_NAME}']",
-        ARTICLE_BY_TITLE_TMP = "//*[@text='{TITLE}']";
+        FOLDER_BY_NAME_TMP = "xpath://*[@text='{FOLDER_NAME}']",
+        ARTICLE_BY_TITLE_TMP = "xpath://*[@text='{TITLE}']";
 
     public MyListsPageObject(AppiumDriver driver) {
         super(driver);
@@ -23,7 +22,7 @@ public class MyListsPageObject extends MainPageObject {
 
     public void openFolderByName(String folderName) {
         String folderNameXpath = getFolderXpathByName(folderName);
-        this.waitForElementAndClick(By.xpath(folderNameXpath),
+        this.waitForElementAndClick(folderNameXpath,
                 "Cannot find folder by " + folderName,
                 5);
     }
@@ -32,7 +31,7 @@ public class MyListsPageObject extends MainPageObject {
         this.waitForArticleAppearByTitle(articleTitle);
         String articleTitleXpath = getSavedArticleXpathByName(articleTitle);
 
-        this.swipeElementToLeft(By.xpath(articleTitleXpath),
+        this.swipeElementToLeft(articleTitleXpath,
                 "Cannot find saved article");
         this.waitForArticleDisappearByTitle(articleTitle);
     }
@@ -40,7 +39,7 @@ public class MyListsPageObject extends MainPageObject {
     public void waitForArticleDisappearByTitle(String articleTitle) {
         String articleTitleXpath = getSavedArticleXpathByName(articleTitle);
 
-        this.waitForElementNotPresent(By.xpath(articleTitleXpath),
+        this.waitForElementNotPresent(articleTitleXpath,
                 "Saved article still present by title " + articleTitle,
                 15);
     }
@@ -48,7 +47,7 @@ public class MyListsPageObject extends MainPageObject {
     public void waitForArticleAppearByTitle(String articleTitle) {
         String articleTitleXpath = getSavedArticleXpathByName(articleTitle);
 
-        this.waitForElementPresent(By.xpath(articleTitleXpath),
+        this.waitForElementPresent(articleTitleXpath,
                 "Cannot find saved title by title " + articleTitle,
                 15);
     }
@@ -57,7 +56,7 @@ public class MyListsPageObject extends MainPageObject {
         this.waitForArticleAppearByTitle(articleTitle);
         String articleTitleXpath = getSavedArticleXpathByName(articleTitle);
 
-        this.waitForElementAndClick(By.xpath(articleTitleXpath),
+        this.waitForElementAndClick(articleTitleXpath,
                 "Cannot find nav button to My lists",
                 5);
     }
