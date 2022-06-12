@@ -26,10 +26,20 @@ public abstract class ArticlePageObject extends MainPageObject {
     private static String getFolderNameElement(String substring) {
         return FOLDER_NAME_ELEMENT.replace("{SUBSTRING}", substring);
     }
+
+    private static String getTitleNameElement(String substring) {
+        return TITLE.replace("{SUBSTRING}", substring);
+    }
     /* TEMPLATES METHODS */
 
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(TITLE,
+                "Cannot find article title",
+                15);
+    }
+
+    public WebElement waitForTitleElement(String title) {
+        return this.waitForElementPresent(getTitleNameElement(title),
                 "Cannot find article title",
                 15);
     }

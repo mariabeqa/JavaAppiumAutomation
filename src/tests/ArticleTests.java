@@ -1,6 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.ArticlePageObject;
 import lib.ui.MyListsPageObject;
 import lib.ui.NavigationUI;
@@ -54,28 +55,59 @@ public class ArticleTests extends CoreTestCase {
         searchPageObject.clickByArticleWithSubstring(firstArticleTitle);
 
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
-        articlePageObject.waitForTitleElement();
-        articlePageObject.addArticleToMyList(nameOfFolder);
+
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.waitForTitleElement();
+            articlePageObject.addArticleToMyList(nameOfFolder);
+        } else {
+            articlePageObject.waitForTitleElement(firstArticleTitle);
+            articlePageObject.addArticleToMySaved();
+        }
         articlePageObject.closeArticle();
 
-        searchPageObject.initSearchInput();
+        if (Platform.getInstance().isIOS()) {
+            searchPageObject.clickCancelSearch();
+            searchPageObject.initSearchInput();
+        } else {
+            searchPageObject.initSearchInput();
+        }
+
         searchPageObject.typeSearchLine(searchWord);
         searchPageObject.clickByArticleWithSubstring(secondArticleTitle);
-        articlePageObject.waitForTitleElement();
-        articlePageObject.addArticleToAnExistingFolder(nameOfFolder);
+
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.waitForTitleElement();
+            articlePageObject.addArticleToAnExistingFolder(nameOfFolder);
+        } else {
+            articlePageObject.waitForTitleElement(secondArticleTitle);
+            articlePageObject.addArticleToMySaved();
+        }
         articlePageObject.closeArticle();
+
+        if (Platform.getInstance().isIOS()) {
+            searchPageObject.clickCancelSearch();
+        }
 
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
         navigationUI.clickMyLists();
 
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
-        myListsPageObject.openFolderByName(nameOfFolder);
+        if (Platform.getInstance().isAndroid()) {
+            myListsPageObject.openFolderByName(nameOfFolder);
+        } else {
+            myListsPageObject.dismissLogInPopUp();
+        }
+
         myListsPageObject.swipeByArticleToDelete(firstArticleTitle);
         myListsPageObject.openArticleByTitle(secondArticleTitle);
 
-        String actualTitle = articlePageObject.getArticleTitle();
+        if (Platform.getInstance().isAndroid()) {
+            String actualTitle = articlePageObject.getArticleTitle();
+            assertEquals(secondArticleTitle, actualTitle);
+        } else {
+            articlePageObject.waitForTitleElement(secondArticleTitle);
+        }
 
-        assertEquals(secondArticleTitle, actualTitle);
     }
 
     @Test

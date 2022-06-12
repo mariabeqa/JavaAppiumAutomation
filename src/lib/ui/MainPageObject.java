@@ -140,7 +140,7 @@ public class MainPageObject {
     }
 
     public void swipeElementToLeft(String locator, String errorMessage) {
-        WebElement element = waitForElementPresent(locator,
+        WebElement element = waitForElementPresent(locator + "/..",
                 errorMessage,
                 10);
 

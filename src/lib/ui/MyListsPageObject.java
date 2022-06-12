@@ -7,7 +7,8 @@ public abstract class MyListsPageObject extends MainPageObject {
 
     protected static String
         FOLDER_BY_NAME_TMP,
-        ARTICLE_BY_TITLE_TMP;
+        ARTICLE_BY_TITLE_TMP,
+        CLOSE_LOGIN_POPUP;
 
     public MyListsPageObject(AppiumDriver driver) {
         super(driver);
@@ -64,6 +65,14 @@ public abstract class MyListsPageObject extends MainPageObject {
         this.waitForElementAndClick(articleTitleXpath,
                 "Cannot find nav button to My lists",
                 5);
+    }
+
+    public void dismissLogInPopUp() {
+        if (Platform.getInstance().isIOS()) {
+            this.waitForElementAndClick(CLOSE_LOGIN_POPUP,
+                    "Cannot find nav button to My lists",
+                    5);
+        }
     }
 
 }
